@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -32,6 +33,15 @@ func NewTaskStore(db *sql.DB) *TaskStore {
 
 // Create creates a new task
 func (s *TaskStore) Create(task Task) error {
+	// Handle empty assigneeID as NULL in the database
+	var assigneeID interface{} = nil
+	if task.AssigneeID != "" {
+		assigneeID = task.AssigneeID
+	}
+
+	println("Creating task with assigneeID:", task.AssigneeID)
+	println("Using assigneeID value for DB:", fmt.Sprintf("%v", assigneeID))
+
 	query := `
 		INSERT INTO tasks (id, title, description, status, priority, project_id, assignee_id, due_date, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -44,11 +54,14 @@ func (s *TaskStore) Create(task Task) error {
 		task.Status,
 		task.Priority,
 		task.ProjectID,
-		task.AssigneeID,
+		assigneeID,
 		task.DueDate,
 		task.CreatedAt,
 		task.UpdatedAt,
 	)
+	if err != nil {
+		println("Database error:", err.Error())
+	}
 	return err
 }
 

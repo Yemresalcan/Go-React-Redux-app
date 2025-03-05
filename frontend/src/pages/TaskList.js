@@ -92,7 +92,8 @@ const TaskList = () => {
     // Format the date correctly for the API
     const formattedValues = {
       ...values,
-      dueDate: values.dueDate ? values.dueDate + 'T00:00:00Z' : null
+      dueDate: values.dueDate ? values.dueDate + 'T00:00:00Z' : null,
+      assigneeId: null // Explicitly set assigneeId to null
     };
     
     if (editingTask) {

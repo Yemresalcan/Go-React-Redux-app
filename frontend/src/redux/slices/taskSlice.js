@@ -196,6 +196,7 @@ export const createTask = createAsyncThunk(
       
       console.log('Making API request to:', `${API_URL}/tasks`);
       console.log('With auth header:', config.headers.Authorization);
+      console.log('Task data being sent:', JSON.stringify(taskData, null, 2));
       
       const response = await axios.post(`${API_URL}/tasks`, taskData, config);
       
@@ -246,6 +247,7 @@ export const updateTask = createAsyncThunk(
       
       console.log('Making API request to:', `${API_URL}/tasks/${id}`);
       console.log('With auth header:', config.headers.Authorization);
+      console.log('Task data being sent:', JSON.stringify(taskData, null, 2));
       
       const response = await axios.put(`${API_URL}/tasks/${id}`, taskData, config);
       
