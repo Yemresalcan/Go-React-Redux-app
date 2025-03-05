@@ -12,6 +12,10 @@ export default {
     "create": "Create",
     "back": "Back",
     "search": "Search",
+    "active": "Active",
+    "version": "Version",
+    "user": "User",
+    "change_language": "Change Language",
     
     // Navigation
     "nav_dashboard": "Dashboard",
@@ -19,6 +23,8 @@ export default {
     "nav_tasks": "Tasks",
     "nav_profile": "Profile",
     "nav_logout": "Logout",
+    "nav_settings": "Settings",
+    "nav_notifications": "Notifications",
     
     // Auth
     "login": "Login",
@@ -68,6 +74,19 @@ export default {
     "due_date": "Due Date",
     "priority": "Priority",
     "assigned_to": "Assigned To",
+    "new_task": "New Task",
+    "filters": "Filters",
+    "all": "All",
+    "all_projects": "All Projects",
+    "clear": "Clear",
+    "no_tasks_found": "No tasks found",
+    "try_changing_filters": "Try changing your filters or create a new task",
+    "create_first_task": "Create your first task to get started",
+    "view": "View",
+    "unknown": "Unknown",
+    "task_title": "Task Title",
+    "description": "Description",
+    "update": "Update",
     
     // Profile
     "profile": "Profile",
@@ -82,14 +101,19 @@ export default {
     // Validation
     "required": "{{field}} is required",
     "min_length": "{{field}} must be at least {{length}} characters",
+    "max_length": "{{field}} must be less than {{length}} characters",
     "passwords_not_match": "Passwords do not match",
     "invalid_email": "Invalid email address",
+    "invalid_status": "Invalid status",
     
     // Status options
     "status_not_started": "Not Started",
     "status_in_progress": "In Progress",
     "status_completed": "Completed",
     "status_on_hold": "On Hold",
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
     
     // Priority options
     "priority_low": "Low",
@@ -98,11 +122,15 @@ export default {
     "priority_urgent": "Urgent",
     
     // Footer
-    "copyright": "© {{year}} Project Management App",
+    "copyright": " Project Management App",
     
     // Not Found
     "not_found": "Page Not Found",
     "not_found_message": "The page you are looking for does not exist.",
-    "go_home": "Go to Home"
+    "go_home": "Go to Home",
+    
+    // Confirmation Dialog
+    "delete_task_title": "Delete Task",
+    "delete_task_message": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone."
   }
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Typography,
@@ -42,34 +43,35 @@ import {
   closeConfirmDialog 
 } from '../redux/slices/uiSlice';
 
-// Validation schema
-const TaskSchema = Yup.object().shape({
-  title: Yup.string()
-    .min(3, 'Title must be at least 3 characters')
-    .max(100, 'Title must be less than 100 characters')
-    .required('Title is required'),
-  description: Yup.string()
-    .max(500, 'Description must be less than 500 characters')
-    .required('Description is required'),
-  status: Yup.string()
-    .oneOf(['Pending', 'In Progress', 'Completed'], 'Invalid status')
-    .required('Status is required'),
-  projectId: Yup.string()
-    .required('Project is required'),
-  dueDate: Yup.date()
-    .nullable(),
-});
-
 const TaskList = () => {
   const dispatch = useDispatch();
   const { tasks, loading: tasksLoading } = useSelector((state) => state.tasks);
   const { projects, loading: projectsLoading } = useSelector((state) => state.projects);
   const { taskDialogOpen, confirmDialogOpen, confirmDialogProps } = useSelector((state) => state.ui);
+  const { t } = useTranslation();
   
   const [editingTask, setEditingTask] = useState(null);
   const [filterStatus, setFilterStatus] = useState('');
   const [filterProject, setFilterProject] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+
+  // Validation schema with translations
+  const TaskSchema = Yup.object().shape({
+    title: Yup.string()
+      .min(3, t('min_length', { field: t('task_title'), length: 3 }))
+      .max(100, t('max_length', { field: t('task_title'), length: 100 }))
+      .required(t('required', { field: t('task_title') })),
+    description: Yup.string()
+      .max(500, t('max_length', { field: t('description'), length: 500 }))
+      .required(t('required', { field: t('description') })),
+    status: Yup.string()
+      .oneOf(['Pending', 'In Progress', 'Completed'], t('invalid_status'))
+      .required(t('required', { field: t('status') })),
+    projectId: Yup.string()
+      .required(t('required', { field: t('project') })),
+    dueDate: Yup.date()
+      .nullable(),
+  });
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -87,10 +89,16 @@ const TaskList = () => {
   };
 
   const handleSubmitTask = (values, { resetForm }) => {
+    // Format the date correctly for the API
+    const formattedValues = {
+      ...values,
+      dueDate: values.dueDate ? values.dueDate + 'T00:00:00Z' : null
+    };
+    
     if (editingTask) {
-      dispatch(updateTask({ id: editingTask.id, taskData: values }));
+      dispatch(updateTask({ id: editingTask.id, taskData: formattedValues }));
     } else {
-      dispatch(createTask(values));
+      dispatch(createTask(formattedValues));
     }
     resetForm();
     handleCloseTaskDialog();
@@ -99,8 +107,8 @@ const TaskList = () => {
   const handleDeleteTask = (task) => {
     dispatch(
       openConfirmDialog({
-        title: 'Delete Task',
-        message: `Are you sure you want to delete "${task.title}"? This action cannot be undone.`,
+        title: t('delete_task_title'),
+        message: t('delete_task_message', { title: task.title }),
         confirmAction: () => {
           dispatch(deleteTask(task.id));
           dispatch(closeConfirmDialog());
@@ -131,7 +139,7 @@ const TaskList = () => {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Tasks</Typography>
+        <Typography variant="h4">{t('tasks')}</Typography>
         <Box>
           <Button
             variant="outlined"
@@ -139,14 +147,14 @@ const TaskList = () => {
             onClick={toggleFilters}
             sx={{ mr: 1 }}
           >
-            Filters
+            {t('filters')}
           </Button>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => handleOpenTaskDialog()}
           >
-            New Task
+            {t('new_task')}
           </Button>
         </Box>
       </Box>
@@ -157,32 +165,32 @@ const TaskList = () => {
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={5}>
               <FormControl fullWidth size="small">
-                <InputLabel id="status-filter-label">Status</InputLabel>
+                <InputLabel id="status-filter-label">{t('status')}</InputLabel>
                 <Select
                   labelId="status-filter-label"
                   id="status-filter"
                   value={filterStatus}
-                  label="Status"
+                  label={t('status')}
                   onChange={(e) => setFilterStatus(e.target.value)}
                 >
-                  <MenuItem value="">All</MenuItem>
-                  <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="In Progress">In Progress</MenuItem>
-                  <MenuItem value="Completed">Completed</MenuItem>
+                  <MenuItem value="">{t('all')}</MenuItem>
+                  <MenuItem value="Pending">{t('pending')}</MenuItem>
+                  <MenuItem value="In Progress">{t('in_progress')}</MenuItem>
+                  <MenuItem value="Completed">{t('completed')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={5}>
               <FormControl fullWidth size="small">
-                <InputLabel id="project-filter-label">Project</InputLabel>
+                <InputLabel id="project-filter-label">{t('project')}</InputLabel>
                 <Select
                   labelId="project-filter-label"
                   id="project-filter"
                   value={filterProject}
-                  label="Project"
+                  label={t('project')}
                   onChange={(e) => setFilterProject(e.target.value)}
                 >
-                  <MenuItem value="">All Projects</MenuItem>
+                  <MenuItem value="">{t('all_projects')}</MenuItem>
                   {projects.map((project) => (
                     <MenuItem key={project.id} value={project.id}>
                       {project.name}
@@ -197,7 +205,7 @@ const TaskList = () => {
                 onClick={clearFilters}
                 fullWidth
               >
-                Clear
+                {t('clear')}
               </Button>
             </Grid>
           </Grid>
@@ -225,12 +233,12 @@ const TaskList = () => {
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  No tasks found
+                  {t('no_tasks_found')}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   {filterStatus || filterProject 
-                    ? 'Try changing your filters or create a new task'
-                    : 'Create your first task to get started'}
+                    ? t('try_changing_filters')
+                    : t('create_first_task')}
                 </Typography>
                 <Button
                   variant="contained"
@@ -238,7 +246,7 @@ const TaskList = () => {
                   onClick={() => handleOpenTaskDialog()}
                   sx={{ mt: 2 }}
                 >
-                  Create Task
+                  {t('create_task')}
                 </Button>
               </Box>
             </Grid>
@@ -255,7 +263,7 @@ const TaskList = () => {
                     </Typography>
                     <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Chip
-                        label={task.status}
+                        label={t(task.status.toLowerCase().replace(' ', '_'))}
                         color={
                           task.status === 'Completed'
                             ? 'success'
@@ -267,14 +275,14 @@ const TaskList = () => {
                       />
                       {task.dueDate && (
                         <Typography variant="caption" color="text.secondary">
-                          Due: {new Date(task.dueDate).toLocaleDateString()}
+                          {t('due_date')}: {new Date(task.dueDate).toLocaleDateString()}
                         </Typography>
                       )}
                     </Box>
                     {task.projectId && (
                       <Box sx={{ mt: 1 }}>
                         <Typography variant="caption" color="text.secondary">
-                          Project: {projects.find(p => p.id === task.projectId)?.name || 'Unknown'}
+                          {t('project')}: {projects.find(p => p.id === task.projectId)?.name || t('unknown')}
                         </Typography>
                       </Box>
                     )}
@@ -285,7 +293,7 @@ const TaskList = () => {
                       component={RouterLink}
                       to={`/tasks/${task.id}`}
                     >
-                      View
+                      {t('view')}
                     </Button>
                     <IconButton
                       size="small"
@@ -326,14 +334,14 @@ const TaskList = () => {
 
       {/* Task Dialog */}
       <Dialog open={taskDialogOpen} onClose={handleCloseTaskDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingTask ? 'Edit Task' : 'Create New Task'}</DialogTitle>
+        <DialogTitle>{editingTask ? t('edit_task') : t('create_task')}</DialogTitle>
         <Formik
           initialValues={{
             title: editingTask?.title || '',
             description: editingTask?.description || '',
             status: editingTask?.status || 'Pending',
             projectId: editingTask?.projectId || '',
-            dueDate: editingTask?.dueDate || '',
+            dueDate: editingTask?.dueDate ? new Date(editingTask.dueDate).toISOString().split('T')[0] : '',
           }}
           validationSchema={TaskSchema}
           onSubmit={handleSubmitTask}
@@ -347,7 +355,7 @@ const TaskList = () => {
                   autoFocus
                   margin="dense"
                   name="title"
-                  label="Task Title"
+                  label={t('task_title')}
                   fullWidth
                   variant="outlined"
                   error={touched.title && Boolean(errors.title)}
@@ -357,7 +365,7 @@ const TaskList = () => {
                   as={TextField}
                   margin="dense"
                   name="description"
-                  label="Description"
+                  label={t('description')}
                   fullWidth
                   variant="outlined"
                   multiline
@@ -370,7 +378,7 @@ const TaskList = () => {
                   select
                   margin="dense"
                   name="projectId"
-                  label="Project"
+                  label={t('project')}
                   fullWidth
                   variant="outlined"
                   error={touched.projectId && Boolean(errors.projectId)}
@@ -387,21 +395,21 @@ const TaskList = () => {
                   select
                   margin="dense"
                   name="status"
-                  label="Status"
+                  label={t('status')}
                   fullWidth
                   variant="outlined"
                   error={touched.status && Boolean(errors.status)}
                   helperText={touched.status && errors.status}
                 >
-                  <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="In Progress">In Progress</MenuItem>
-                  <MenuItem value="Completed">Completed</MenuItem>
+                  <MenuItem value="Pending">{t('pending')}</MenuItem>
+                  <MenuItem value="In Progress">{t('in_progress')}</MenuItem>
+                  <MenuItem value="Completed">{t('completed')}</MenuItem>
                 </Field>
                 <Field
                   as={TextField}
                   margin="dense"
                   name="dueDate"
-                  label="Due Date"
+                  label={t('due_date')}
                   type="date"
                   fullWidth
                   variant="outlined"
@@ -413,9 +421,9 @@ const TaskList = () => {
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseTaskDialog}>Cancel</Button>
+                <Button onClick={handleCloseTaskDialog}>{t('cancel')}</Button>
                 <Button type="submit" variant="contained">
-                  {editingTask ? 'Update' : 'Create'}
+                  {editingTask ? t('update') : t('create')}
                 </Button>
               </DialogActions>
             </Form>
@@ -430,9 +438,9 @@ const TaskList = () => {
           <Typography>{confirmDialogProps.message}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => dispatch(closeConfirmDialog())}>Cancel</Button>
+          <Button onClick={() => dispatch(closeConfirmDialog())}>{t('cancel')}</Button>
           <Button onClick={confirmDialogProps.confirmAction} color="error" variant="contained">
-            Delete
+            {t('delete')}
           </Button>
         </DialogActions>
       </Dialog>

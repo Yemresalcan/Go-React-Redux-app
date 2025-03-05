@@ -12,6 +12,10 @@ export default {
     "create": "Oluştur",
     "back": "Geri",
     "search": "Ara",
+    "active": "Aktif",
+    "version": "Versiyon",
+    "user": "Kullanıcı",
+    "change_language": "Dil Değiştir",
     
     // Navigation
     "nav_dashboard": "Gösterge Paneli",
@@ -19,6 +23,8 @@ export default {
     "nav_tasks": "Görevler",
     "nav_profile": "Profil",
     "nav_logout": "Çıkış",
+    "nav_settings": "Ayarlar",
+    "nav_notifications": "Bildirimler",
     
     // Auth
     "login": "Giriş",
@@ -68,28 +74,29 @@ export default {
     "due_date": "Son Tarih",
     "priority": "Öncelik",
     "assigned_to": "Atanan Kişi",
-    
-    // Profile
-    "profile": "Profil",
-    "update_profile": "Profili Güncelle",
-    "change_password": "Şifre Değiştir",
-    "current_password": "Mevcut Şifre",
-    "new_password": "Yeni Şifre",
-    "personal_info": "Kişisel Bilgiler",
-    "first_name": "Ad",
-    "last_name": "Soyad",
-    
-    // Validation
-    "required": "{{field}} gereklidir",
-    "min_length": "{{field}} en az {{length}} karakter olmalıdır",
-    "passwords_not_match": "Şifreler eşleşmiyor",
-    "invalid_email": "Geçersiz e-posta adresi",
+    "new_task": "Yeni Görev",
+    "filters": "Filtreler",
+    "all": "Tümü",
+    "all_projects": "Tüm Projeler",
+    "clear": "Temizle",
+    "no_tasks_found": "Görev bulunamadı",
+    "try_changing_filters": "Filtrelerinizi değiştirmeyi veya yeni bir görev oluşturmayı deneyin",
+    "create_first_task": "Başlamak için ilk görevinizi oluşturun",
+    "view": "Görüntüle",
+    "unknown": "Bilinmiyor",
+    "project": "Proje",
+    "task_title": "Görev Başlığı",
+    "description": "Açıklama",
+    "update": "Güncelle",
     
     // Status options
     "status_not_started": "Başlanmadı",
     "status_in_progress": "Devam Ediyor",
     "status_completed": "Tamamlandı",
     "status_on_hold": "Beklemede",
+    "pending": "Beklemede",
+    "in_progress": "Devam Ediyor",
+    "completed": "Tamamlandı",
     
     // Priority options
     "priority_low": "Düşük",
@@ -103,6 +110,10 @@ export default {
     // Not Found
     "not_found": "Sayfa Bulunamadı",
     "not_found_message": "Aradığınız sayfa mevcut değil.",
-    "go_home": "Ana Sayfaya Git"
+    "go_home": "Ana Sayfaya Git",
+    
+    // Confirmation Dialog
+    "delete_task_title": "Görevi Sil",
+    "delete_task_message": "\"{{title}}\" görevini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
   }
 };
