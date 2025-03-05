@@ -180,6 +180,10 @@ func (c *TaskController) CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Log the incoming task data
+	taskJSON, _ := json.Marshal(task)
+	println("Received task data:", string(taskJSON))
+
 	// Get user from context
 	user, err := middleware.GetUserFromContext(r.Context())
 	if err != nil {
@@ -216,9 +220,19 @@ func (c *TaskController) CreateTask(w http.ResponseWriter, r *http.Request) {
 	task.CreatedAt = time.Now()
 	task.UpdatedAt = time.Now()
 
+	// Explicitly set AssigneeID to empty string to handle null in database
+	// This is critical for handling foreign key constraint
+	if task.AssigneeID == "" || task.AssigneeID == "null" {
+		task.AssigneeID = ""
+		println("Setting task.AssigneeID to empty string")
+	} else {
+		println("Using provided assigneeID:", task.AssigneeID)
+	}
+
 	// Create task
 	err = c.TaskStore.Create(task)
 	if err != nil {
+		println("Error creating task:", err.Error())
 		utils.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}

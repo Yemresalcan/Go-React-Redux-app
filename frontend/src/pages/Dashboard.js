@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Typography,
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const { projects, loading: projectsLoading } = useSelector((state) => state.projects);
   const { tasks, loading: tasksLoading } = useSelector((state) => state.tasks);
+  const { t } = useTranslation();
 
   useEffect(() => {
     dispatch(fetchProjects());
@@ -41,12 +43,12 @@ const Dashboard = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Dashboard
+        {t('nav_dashboard')}
       </Typography>
       
       {user && (
         <Typography variant="h6" gutterBottom>
-          Welcome, {user.firstName || user.username}!
+          {t('welcome')}, {user.firstName || user.username}!
         </Typography>
       )}
       
@@ -72,7 +74,7 @@ const Dashboard = () => {
               >
                 <FolderIcon sx={{ fontSize: 40, mb: 1 }} />
                 <Typography variant="h5">{projects.length}</Typography>
-                <Typography variant="body1">Total Projects</Typography>
+                <Typography variant="body1">{t('total_projects')}</Typography>
               </Paper>
             </Grid>
             
@@ -90,7 +92,7 @@ const Dashboard = () => {
               >
                 <AssignmentIcon sx={{ fontSize: 40, mb: 1 }} />
                 <Typography variant="h5">{safeTasks.length}</Typography>
-                <Typography variant="body1">Total Tasks</Typography>
+                <Typography variant="body1">{t('total_tasks')}</Typography>
               </Paper>
             </Grid>
             
@@ -108,7 +110,7 @@ const Dashboard = () => {
               >
                 <AssignmentIcon sx={{ fontSize: 40, mb: 1 }} />
                 <Typography variant="h5">{completedTasks.length}</Typography>
-                <Typography variant="body1">Completed Tasks</Typography>
+                <Typography variant="body1">{t('completed_tasks')}</Typography>
               </Paper>
             </Grid>
             
@@ -126,27 +128,27 @@ const Dashboard = () => {
               >
                 <AssignmentIcon sx={{ fontSize: 40, mb: 1 }} />
                 <Typography variant="h5">{pendingTasks.length}</Typography>
-                <Typography variant="body1">Pending Tasks</Typography>
+                <Typography variant="body1">{t('status_not_started')}</Typography>
               </Paper>
             </Grid>
           </Grid>
           
           {/* Recent Projects */}
           <Typography variant="h5" gutterBottom>
-            Recent Projects
+            {t('recent_projects')}
           </Typography>
           <Grid container spacing={3} sx={{ mb: 4 }}>
             {projects.length === 0 ? (
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, textAlign: 'center' }}>
-                  <Typography variant="body1">No projects found.</Typography>
+                  <Typography variant="body1">{t('projects')} {t('not_found_message')}</Typography>
                   <Button
                     component={RouterLink}
                     to="/projects"
                     variant="contained"
                     sx={{ mt: 2 }}
                   >
-                    Create a Project
+                    {t('create_project')}
                   </Button>
                 </Paper>
               </Grid>
@@ -168,7 +170,7 @@ const Dashboard = () => {
                         component={RouterLink}
                         to={`/projects/${project.id}`}
                       >
-                        View Details
+                        {t('project_details')}
                       </Button>
                     </CardActions>
                   </Card>
@@ -179,20 +181,20 @@ const Dashboard = () => {
           
           {/* Recent Tasks */}
           <Typography variant="h5" gutterBottom>
-            Recent Tasks
+            {t('recent_tasks')}
           </Typography>
           <Grid container spacing={3}>
             {safeTasks.length === 0 ? (
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, textAlign: 'center' }}>
-                  <Typography variant="body1">No tasks found.</Typography>
+                  <Typography variant="body1">{t('tasks')} {t('not_found_message')}</Typography>
                   <Button
                     component={RouterLink}
                     to="/tasks"
                     variant="contained"
                     sx={{ mt: 2 }}
                   >
-                    Create a Task
+                    {t('create_task')}
                   </Button>
                 </Paper>
               </Grid>
@@ -219,7 +221,11 @@ const Dashboard = () => {
                               : 'warning.main',
                         }}
                       >
-                        Status: {task.status}
+                        {t('status')}: {task.status === 'Completed' 
+                          ? t('status_completed') 
+                          : task.status === 'In Progress' 
+                          ? t('status_in_progress') 
+                          : t('status_not_started')}
                       </Typography>
                     </CardContent>
                     <CardActions>
@@ -228,7 +234,7 @@ const Dashboard = () => {
                         component={RouterLink}
                         to={`/tasks/${task.id}`}
                       >
-                        View Details
+                        {t('task_details')}
                       </Button>
                     </CardActions>
                   </Card>
