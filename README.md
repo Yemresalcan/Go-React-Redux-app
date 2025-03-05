@@ -1,6 +1,23 @@
-# Go React Redux Project Management Application
+# Go-React-Redux Project Management Application
 
-This is a full-stack project management application with a Go backend and React Redux frontend.
+![Project Management App](https://img.shields.io/badge/Project%20Management-App-blue)
+![Go](https://img.shields.io/badge/Go-1.21-00ADD8?logo=go)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![Redux](https://img.shields.io/badge/Redux-Toolkit-764ABC?logo=redux)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14-336791?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
+
+A full-stack project management application with a Go backend and React Redux frontend. This application provides a comprehensive solution for managing projects and tasks with user authentication, role-based access control, and multilingual support.
+
+## Features
+
+- **User Authentication**: Secure JWT-based authentication system
+- **Project Management**: Create, view, update, and delete projects
+- **Task Management**: Manage tasks with priorities, statuses, and due dates
+- **Role-Based Access Control**: Different permission levels for users
+- **Multilingual Support**: English and Turkish language options
+- **Responsive Design**: Works on desktop and mobile devices
+- **Docker Support**: Easy deployment with Docker Compose
 
 ## Project Structure
 
@@ -21,203 +38,196 @@ go-react-redux-app/
     ├── public/             # Static files
     └── src/                # React source code
         ├── components/     # React components
+        ├── i18n/           # Internationalization
+        ├── pages/          # Page components
         └── redux/          # Redux store and slices
 ```
 
-## Backend (Go)
+## Getting Started
 
-The backend is a RESTful API built with Go, using PostgreSQL for data storage and JWT for authentication.
+### Prerequisites
 
-### Features
+- [Go](https://golang.org/dl/) (version 1.21 or higher)
+- [Node.js](https://nodejs.org/) (version 16 or higher)
+- [PostgreSQL](https://www.postgresql.org/download/) (version 14 or higher)
+- [Docker](https://www.docker.com/products/docker-desktop/) (optional, for containerized setup)
 
-- User authentication with JWT
-- Project management (CRUD operations)
-- Task management with priorities and statuses
-- Role-based access control
+### Running with Docker (Recommended)
 
-### API Endpoints
+The easiest way to run the application is using Docker Compose, which requires no local setup other than Docker itself.
 
-#### Authentication
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Yemresalcan/Go-React-Redux-app.git
+   cd Go-React-Redux-app
+   ```
+
+2. Start all services with Docker Compose:
+   ```bash
+   docker-compose up -d
+   ```
+
+   This command will automatically set up:
+   - PostgreSQL database
+   - Go backend API
+   - React frontend application
+
+3. Access the application:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8080
+   - PostgreSQL: localhost:5432 (username: postgres, password: postgres)
+
+4. To stop the services:
+   ```bash
+   docker-compose down
+   ```
+
+5. To completely remove the database data:
+   ```bash
+   docker-compose down -v
+   ```
+
+### Manual Setup
+
+#### Backend Setup
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Create a PostgreSQL database:
+   ```sql
+   CREATE DATABASE project_management;
+   ```
+
+3. Apply the database schema:
+   ```bash
+   psql -d project_management -f schema.sql
+   ```
+
+4. Create a `.env` file with the following variables:
+   ```
+   PORT=8080
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USER=postgres
+   DB_PASSWORD=your_password
+   DB_NAME=project_management
+   JWT_KEY=your-super-secret-key-change-in-production
+   ```
+
+5. Download dependencies and run the application:
+   ```bash
+   go mod tidy
+   go run main.go
+   ```
+
+   The backend server will start on http://localhost:8080.
+
+#### Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+   The frontend development server will start on http://localhost:3000.
+
+## API Endpoints
+
+### Authentication
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login and get JWT token
 
-#### Projects
+### Projects
 - `GET /api/projects` - Get all projects for the authenticated user
 - `POST /api/projects` - Create a new project
 - `GET /api/projects/:id` - Get a specific project
 - `PUT /api/projects/:id` - Update a project
 - `DELETE /api/projects/:id` - Delete a project
 
-#### Tasks
+### Tasks
 - `GET /api/projects/:projectId/tasks` - Get all tasks for a project
 - `POST /api/tasks` - Create a new task
 - `GET /api/tasks/:id` - Get a specific task
 - `PUT /api/tasks/:id` - Update a task
 - `DELETE /api/tasks/:id` - Delete a task
 
-### Database Setup
-
-1. Install PostgreSQL and create a database:
-   ```sql
-   CREATE DATABASE project_management;
-   ```
-
-2. Apply the schema:
-   ```
-   psql -d project_management -f schema.sql
-   ```
-
-### Environment Variables
-
-Create a `.env` file in the backend directory with the following variables:
-
-```
-PORT=8080
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_NAME=project_management
-JWT_KEY=your-super-secret-key-change-in-production
-```
-
-### Running the Backend
-
-1. Navigate to the backend directory:
-   ```
-   cd backend
-   ```
-
-2. Download dependencies:
-   ```
-   go mod tidy
-   ```
-
-3. Run the application:
-   ```
-   go run main.go
-   ```
-
-The backend server will start on http://localhost:8080.
-
-## Docker ile Çalıştırma
-
-Projeyi Docker ile çalıştırmak çok daha kolaydır ve herhangi bir yerel kurulum gerektirmez.
-
-### Gereksinimler
-
-- [Docker](https://www.docker.com/products/docker-desktop/) yüklü olmalıdır
-- [Docker Compose](https://docs.docker.com/compose/install/) yüklü olmalıdır (Docker Desktop ile birlikte gelir)
-
-### Çalıştırma Adımları
-
-1. Projeyi klonlayın:
-   ```
-   git clone https://github.com/yourusername/go-react-redux-app.git
-   cd go-react-redux-app
-   ```
-
-2. Docker Compose ile tüm servisleri başlatın:
-   ```
-   docker-compose up -d
-   ```
-
-Bu komut ile:
-- PostgreSQL veritabanı
-- Go backend API
-- React frontend uygulaması
-
-otomatik olarak kurulacak ve çalışmaya başlayacaktır.
-
-3. Uygulamaya erişim:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8080
-   - PostgreSQL: localhost:5432 (kullanıcı adı: postgres, şifre: postgres)
-
-4. Servisleri durdurmak için:
-   ```
-   docker-compose down
-   ```
-
-5. Veritabanı verilerini tamamen silmek için:
-   ```
-   docker-compose down -v
-   ```
-
-## Frontend (React Redux)
-
-The frontend is built with React and Redux, using Redux Toolkit for state management.
-
-### Features
-
-- User authentication
-- Project dashboard
-- Task management interface
-- Responsive design
-
-### Running the Frontend
-
-1. Navigate to the frontend directory:
-   ```
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-3. Start the development server:
-   ```
-   npm start
-   ```
-
-The frontend development server will start on http://localhost:3000.
-
 ## Technologies Used
 
-- **Backend**:
-  - Go
-  - Gorilla Mux for routing
-  - PostgreSQL for data storage
-  - JWT for authentication
-  - CORS handling
+### Backend
+- **Go**: Core programming language
+- **Gorilla Mux**: HTTP router and URL matcher
+- **PostgreSQL**: Relational database
+- **JWT**: Authentication mechanism
+- **CORS**: Cross-Origin Resource Sharing handling
 
-- **Frontend**:
-  - React
-  - Redux & Redux Toolkit
-  - Material-UI for components
-  - Formik & Yup for form validation
-  - Axios for API calls
-  - React Router for navigation
+### Frontend
+- **React**: UI library
+- **Redux & Redux Toolkit**: State management
+- **Material-UI**: Component library
+- **i18next**: Internationalization
+- **Formik & Yup**: Form handling and validation
+- **Axios**: HTTP client
+- **React Router**: Navigation
 
-## Application Features
+## Security Features
 
-### User Management
-- User registration and login
-- JWT-based authentication
-- Profile management
+- Password hashing with bcrypt
+- JWT token authentication
+- Role-based access control
+- Input validation and sanitization
+- HTTPS support (when deployed with proper certificates)
 
-### Project Management
-- Create, read, update, and delete projects
-- View project details
-- Assign tasks to projects
+## Multilingual Support
 
-### Task Management
-- Create, read, update, and delete tasks
-- Filter tasks by status and project
-- Task status tracking (Pending, In Progress, Completed)
-- Task due date management
+The application supports multiple languages:
+- English (default)
+- Turkish
 
-## Future Enhancements
+Language can be changed using the language switcher in the application header.
 
-- User roles and permissions
-- Team collaboration features
-- File attachments for tasks and projects
-- Email notifications
-- Advanced reporting and analytics
-- Mobile application
+## Testing
+
+### Backend Tests
+```bash
+cd backend
+go test ./...
+```
+
+### Frontend Tests
+```bash
+cd frontend
+npm test
+```
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Contact
+
+Yemre Salcan - [GitHub](https://github.com/Yemresalcan)
+
+Project Link: [https://github.com/Yemresalcan/Go-React-Redux-app](https://github.com/Yemresalcan/Go-React-Redux-app)
