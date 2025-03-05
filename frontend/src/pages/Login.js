@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -19,20 +20,21 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { login, clearError } from '../redux/slices/authSlice';
 
-// Validation schema
-const LoginSchema = Yup.object().shape({
-  username: Yup.string()
-    .required('Username is required'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
-});
-
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
   const [showError, setShowError] = useState(false);
+  const { t } = useTranslation();
+
+  // Validation schema with translations
+  const LoginSchema = Yup.object().shape({
+    username: Yup.string()
+      .required(t('required', { field: t('username') })),
+    password: Yup.string()
+      .min(6, t('min_length', { field: t('password'), length: 6 }))
+      .required(t('required', { field: t('password') })),
+  });
 
   useEffect(() => {
     // If already authenticated, redirect to dashboard
@@ -75,7 +77,7 @@ const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          {t('sign_in')}
         </Typography>
         
         {showError && (
@@ -97,7 +99,7 @@ const Login = () => {
                 required
                 fullWidth
                 id="username"
-                label="Username"
+                label={t('username')}
                 name="username"
                 autoComplete="username"
                 autoFocus
@@ -110,7 +112,7 @@ const Login = () => {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={t('password')}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -124,12 +126,12 @@ const Login = () => {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={loading}
               >
-                {loading ? <CircularProgress size={24} /> : 'Sign In'}
+                {loading ? <CircularProgress size={24} /> : t('sign_in')}
               </Button>
               <Grid container>
                 <Grid item>
                   <Link component={RouterLink} to="/register" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                    {t('no_account')}
                   </Link>
                 </Grid>
               </Grid>
@@ -142,7 +144,8 @@ const Login = () => {
         <Typography variant="body2" color="text.secondary" align="center">
           {'© '}
           {new Date().getFullYear()}
-          {' Project Management App'}
+          {' '}
+          {t('app_title')}
         </Typography>
       </Box>
     </Container>

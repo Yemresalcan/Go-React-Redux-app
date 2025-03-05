@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Box, Typography, Button, Container, Paper } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const NotFound = () => {
+  const { t } = useTranslation();
+  
   return (
     <Container maxWidth="md">
       <Paper
@@ -22,11 +25,10 @@ const NotFound = () => {
           404
         </Typography>
         <Typography variant="h5" gutterBottom>
-          Page Not Found
+          {t('not_found')}
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          The page you are looking for might have been removed, had its name changed,
-          or is temporarily unavailable.
+          {t('not_found_message')}
         </Typography>
         <Box mt={3}>
           <Button
@@ -36,7 +38,7 @@ const NotFound = () => {
             to="/"
             size="large"
           >
-            Go to Dashboard
+            {t('go_home')}
           </Button>
         </Box>
       </Paper>

@@ -6,6 +6,8 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+// Import i18n configuration
+import './i18n/i18n';
 
 // Token'ı localStorage'dan alıp axios headers'a ekleyelim
 const token = localStorage.getItem('token');

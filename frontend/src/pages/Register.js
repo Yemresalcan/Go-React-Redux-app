@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -43,6 +44,7 @@ const Register = () => {
   const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
   const [showError, setShowError] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // If already authenticated, redirect to dashboard
@@ -92,7 +94,7 @@ const Register = () => {
           <PersonAddIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          {t('sign_up')}
         </Typography>
         
         {showError && (
@@ -103,7 +105,7 @@ const Register = () => {
         
         {registrationSuccess && (
           <Alert severity="success" sx={{ width: '100%', mt: 2 }}>
-            Registration successful! Redirecting to login...
+            {t('success')}! {t('login')}...
           </Alert>
         )}
         
@@ -115,7 +117,22 @@ const Register = () => {
             firstName: '',
             lastName: '',
           }}
-          validationSchema={RegisterSchema}
+          validationSchema={Yup.object().shape({
+            username: Yup.string()
+              .min(3, t('min_length', { field: t('username'), length: 3 }))
+              .max(20, t('username') + ' must be less than 20 characters')
+              .required(t('required', { field: t('username') })),
+            email: Yup.string()
+              .email(t('invalid_email'))
+              .required(t('required', { field: t('email') })),
+            password: Yup.string()
+              .min(6, t('min_length', { field: t('password'), length: 6 }))
+              .required(t('required', { field: t('password') })),
+            firstName: Yup.string()
+              .required(t('required', { field: t('first_name') })),
+            lastName: Yup.string()
+              .required(t('required', { field: t('last_name') })),
+          })}
           onSubmit={handleSubmit}
         >
           {({ errors, touched }) => (
@@ -129,7 +146,7 @@ const Register = () => {
                     required
                     fullWidth
                     id="firstName"
-                    label="First Name"
+                    label={t('first_name')}
                     autoFocus
                     error={touched.firstName && Boolean(errors.firstName)}
                     helperText={touched.firstName && errors.firstName}
@@ -141,7 +158,7 @@ const Register = () => {
                     required
                     fullWidth
                     id="lastName"
-                    label="Last Name"
+                    label={t('last_name')}
                     name="lastName"
                     autoComplete="family-name"
                     error={touched.lastName && Boolean(errors.lastName)}
@@ -154,7 +171,7 @@ const Register = () => {
                     required
                     fullWidth
                     id="username"
-                    label="Username"
+                    label={t('username')}
                     name="username"
                     autoComplete="username"
                     error={touched.username && Boolean(errors.username)}
@@ -167,7 +184,7 @@ const Register = () => {
                     required
                     fullWidth
                     id="email"
-                    label="Email Address"
+                    label={t('email')}
                     name="email"
                     autoComplete="email"
                     error={touched.email && Boolean(errors.email)}
@@ -180,7 +197,7 @@ const Register = () => {
                     required
                     fullWidth
                     name="password"
-                    label="Password"
+                    label={t('password')}
                     type="password"
                     id="password"
                     autoComplete="new-password"
@@ -196,12 +213,12 @@ const Register = () => {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={loading || registrationSuccess}
               >
-                {loading ? <CircularProgress size={24} /> : 'Sign Up'}
+                {loading ? <CircularProgress size={24} /> : t('sign_up')}
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link component={RouterLink} to="/login" variant="body2">
-                    Already have an account? Sign in
+                    {t('have_account')}
                   </Link>
                 </Grid>
               </Grid>
@@ -214,7 +231,8 @@ const Register = () => {
         <Typography variant="body2" color="text.secondary" align="center">
           {'© '}
           {new Date().getFullYear()}
-          {' Project Management App'}
+          {' '}
+          {t('app_title')}
         </Typography>
       </Box>
     </Container>

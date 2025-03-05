@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Drawer,
@@ -18,18 +19,20 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import PersonIcon from '@mui/icons-material/Person';
 import { setDrawerOpen } from '../../redux/slices/uiSlice';
 
-const menuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { text: 'Projects', icon: <FolderIcon />, path: '/projects' },
-  { text: 'Tasks', icon: <AssignmentIcon />, path: '/tasks' },
-  { text: 'Profile', icon: <PersonIcon />, path: '/profile' },
-];
-
 const Sidebar = ({ drawerWidth }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { drawerOpen } = useSelector((state) => state.ui);
+  const { t } = useTranslation();
+
+  // Menu items with translations
+  const menuItems = [
+    { text: t('nav_dashboard'), icon: <DashboardIcon />, path: '/dashboard' },
+    { text: t('nav_projects'), icon: <FolderIcon />, path: '/projects' },
+    { text: t('nav_tasks'), icon: <AssignmentIcon />, path: '/tasks' },
+    { text: t('nav_profile'), icon: <PersonIcon />, path: '/profile' },
+  ];
 
   const handleDrawerToggle = () => {
     dispatch(setDrawerOpen(!drawerOpen));

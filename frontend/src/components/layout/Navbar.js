@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   AppBar,
   Box,
@@ -16,12 +17,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { toggleDrawer } from '../../redux/slices/uiSlice';
 import { logout } from '../../redux/slices/authSlice';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = ({ drawerWidth }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { drawerOpen } = useSelector((state) => state.ui);
+  const { t } = useTranslation();
   
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -84,12 +87,15 @@ const Navbar = ({ drawerWidth }) => {
           component="div"
           sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
         >
-          Project Management
+          {t('app_title')}
         </Typography>
 
+        {/* Language Switcher */}
+        <LanguageSwitcher />
+
         {user && (
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+          <Box sx={{ flexGrow: 0, ml: 2 }}>
+            <Tooltip title={t('profile')}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {user.firstName ? (
                   <Avatar alt={`${user.firstName} ${user.lastName}`}>
@@ -118,10 +124,10 @@ const Navbar = ({ drawerWidth }) => {
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={() => handleMenuClick('/profile')}>
-                <Typography textAlign="center">Profile</Typography>
+                <Typography textAlign="center">{t('nav_profile')}</Typography>
               </MenuItem>
               <MenuItem onClick={handleLogout}>
-                <Typography textAlign="center">Logout</Typography>
+                <Typography textAlign="center">{t('nav_logout')}</Typography>
               </MenuItem>
             </Menu>
           </Box>
